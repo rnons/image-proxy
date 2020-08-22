@@ -13,7 +13,12 @@ const server = http.createServer(async (req, res) => {
   log(`fetching ${url}`);
 
   const reqHeaders = { ...req.headers, accept: "image/*" };
-  ["host", "cookie"].forEach(name => delete reqHeaders[name]);
+  ["host", "cookie", "connection"].forEach(name => delete reqHeaders[name]);
+  Object.keys(reqHeaders).forEach(name => {
+    if (name.startsWith("x-")) {
+      delete reqHeaders[name];
+    }
+  });
   const response = await fetch(url, {
     headers: reqHeaders
   });
